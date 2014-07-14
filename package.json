@@ -1,0 +1,28 @@
+{
+  "name": "oembetter",
+  "version": "0.1.0",
+  "description": "Extends the oembed module with substitutes and filters that provide or improve oembed support for services that don't have it. Allows you to easily add your own substitutes and filters and supply a whitelist of services you trust to prevent XSS attacks.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/punkave/oembetter"
+  },
+  "keywords": [
+    "oembed",
+    "oembetter",
+    "media",
+    "embed"
+  ],
+  "author": "P'unk Avenue LLC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/punkave/oembetter/issues"
+  },
+  "homepage": "https://github.com/punkave/oembetter",
+  "dependencies": {
+    "request": "^2.37.0"
+  }
+}
