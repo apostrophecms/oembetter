@@ -1,5 +1,7 @@
-var oembed = require('oembed');
+var oembed = require('./oembed.js');
+var async = require('async');
 var filters = require('./filters.js');
+var urls = require('url');
 
 module.exports = function(options) {
   var self = {};
@@ -12,19 +14,41 @@ module.exports = function(options) {
   self.after = filters.after.concat(options.after || []);
   self.fallback = filters.fallback.concat(options.fallback || []);
 
-  self.fetch = function(url, callback) {
+  self.fetch = function(url, options, callback) {
+    if (arguments.length === 2) {
+      callback = options;
+      options = {};
+    }
     var response;
     var warnings = [];
+    if (self._whitelist) {
+      var parsed = urls.parse(url);
+      if (!parsed) {
+        return callback(new Error('oembetter: invalid URL: ' + url));
+      }
+      var i;
+      var good = false;
+      for (i = 0; (i < self._whitelist.length); i++) {
+        if (self.inDomain(self._whitelist[i], parsed.hostname)) {
+          good = true;
+          break;
+        }
+      }
+      if (!good) {
+        return callback(new Error('oembetter: ' + url + ' is not in a whitelisted domain.'));
+      }
+    }
     return async.series({
       before: function(callback) {
-        return async.series(self.before, function(before, callback) {
-          return before(url, response, function(err, _url, _response) {
+        return async.eachSeries(self.before, function(before, callback) {
+          return before(url, options, response, function(err, _url, _options, _response) {
             // Nonfatal
             if (err) {
               warnings.push(err);
               return callback(null);
             }
             url = _url || url;
+            options = _options || options;
             response = _response || response;
             return callback(null);
           });
@@ -35,21 +59,21 @@ module.exports = function(options) {
           // Preempted by a before
           return callback(null);
         }
-        return oembed.fetch(url, function (err, result) {
+        return oembed(url, options, function (err, result) {
+          response = result;
           if (err) {
-            return callback(err);
-          } else {
-            response = result;
-            return callback(null);
+            // not necessarily fatal
+            warnings.push(err);
           }
+          return callback(null);
         });
       },
       fallback: function(fallbackCallback) {
         if (response) {
           return setImmediate(fallbackCallback);
         }
-        return async.series(self.fallback, function(fallback, callback) {
-          return fallback(url, function(err, _response) {
+        return async.eachSeries(self.fallback, function(fallback, callback) {
+          return fallback(url, options, function(err, _response) {
             if (err) {
               warnings.push(err);
               return callback(err);
@@ -67,8 +91,8 @@ module.exports = function(options) {
         if (!response) {
           return setImmediate(callback);
         }
-        return async.series(self.after, function(after, callback) {
-          return after(url, response, function(err, _response) {
+        return async.eachSeries(self.after, function(after, callback) {
+          return after(url, options, response, function(err, _response) {
             if (err) {
               warnings.push(err);
               return callback(err);
@@ -79,9 +103,19 @@ module.exports = function(options) {
         }, callback);
       }
     }, function(err) {
+      // Handle fatal errors
       if (err) {
         return callback(err);
       }
+      // If there is no response, treat the first
+      // warning as a fatal error
+      if (!response) {
+        if (warnings.length) {
+          return callback(warnings[0], warnings);
+        }
+      }
+      // If there is a response, make the warnings available as the
+      // third argument
       return callback(null, response, warnings);
     });
   };
@@ -97,5 +131,42 @@ module.exports = function(options) {
   self.addFallback = function(fn) {
     self.fallback.push(fn);
   };
+
+  self.inDomain = function(domain, hostname) {
+
+    hostname = hostname.toLowerCase();
+    domain = domain.toLowerCase();
+    if (hostname === domain) {
+      return true;
+    }
+    if (hostname.substr(-domain.length - 1) === ('.' + domain)) {
+      return true;
+    }
+    return false;
+  };
+
+  self.whitelist = function(_whitelist) {
+    self._whitelist = _whitelist;
+  };
+
+  self.suggestedWhitelist = [
+    'youtube.com',
+    'blip.tv',
+    'dailymotion.com',
+    'flickr.com',
+    'hulu.com',
+    'nfb.ca',
+    'qik.com',
+    'revision3.com',
+    'scribd.com',
+    'viddler.com',
+    'vimeo.com',
+    'youtube.com',
+    'dotsub.com',
+    'yfrog.com',
+    'photobucket.com'
+  ];
+
+  return self;
 };
 
