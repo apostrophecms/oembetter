@@ -167,8 +167,4 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## About P'unk Avenue and Apostrophe
 
-`oembetter` was created at [P'unk Avenue](http://punkave.com) for use in many pro
-jects built with Apostrophe, an open-source content management system built on n
-ode.js. `oembetter` isn't mandatory for Apostrophe and vice versa, but they play very w
-ell together. If you like `oembetter` you should definitely [check out apostrophe
-now.org](http://apostrophenow.org).
+`oembetter` was created at [P'unk Avenue](http://punkave.com) for use in many projects built with Apostrophe, an open-source content management system built on node.js. `oembetter` isn't mandatory for Apostrophe and vice versa, but they play very well together. If you like `oembetter` you should definitely [check out apostrophenow.org](http://apostrophenow.org).
