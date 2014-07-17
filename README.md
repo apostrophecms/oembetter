@@ -1,5 +1,7 @@
 # oembetter
 
+<a href="http://apostrophenow.org/"><img src="https://raw.github.com/punkave/oembetter/master/logos/logo-box-madefor.png" align="right" /></a>
+
 `oembetter` is a modern [oembed](http://oembed.com) client which allows you to add filters that provide or improve oembed support for services that either don't have it or don't do it very well.
 
 `oembetter` fully supports the `oembed` standard including both XML and JSON responses from servers, and delivers the result as a neatly parsed JavaScript object.
@@ -163,3 +165,10 @@ oembetter.addFallback(function(url, options, callback) {
 });
 ```
 
+## About P'unk Avenue and Apostrophe
+
+`oembetter` was created at [P'unk Avenue](http://punkave.com) for use in many pro
+jects built with Apostrophe, an open-source content management system built on n
+ode.js. `oembetter` isn't mandatory for Apostrophe and vice versa, but they play very w
+ell together. If you like `oembetter` you should definitely [check out apostrophe
+now.org](http://apostrophenow.org).
