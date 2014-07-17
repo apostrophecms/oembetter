@@ -31,6 +31,7 @@ oembetter is not restricted to handling responses of type `video`. See the [oemb
 
 You can pass an object containing `maxwidth` and `maxheight` options. Sites vary in how well they support them.
 
+```javascript
 var oembetter = require('oembetter')();
 
 oembetter.fetch(url, function(err, { maxwidth: 480, maxheight: 480 }, response) {
@@ -102,6 +103,7 @@ oembetter.addBefore(function(url, options, response, callback) {
 
 You can also write a filter that just adjusts URLs. This filter knows that `wiggypants.com` URLs will work better if we point them at `jiggypants.com`:
 
+```javascript
 oembetter.addBefore(function(url, options, response, callback) {
   var parsed = urls.parse(url);
   if (!oembetter.inDomain('wiggypants.com', parsed.hostname)) {
@@ -110,6 +112,7 @@ oembetter.addBefore(function(url, options, response, callback) {
   url = url.replace(/wiggypants\.com/g, 'jiggypants.com');
   return callback(null, url);
 });
+```
 
 ### Filtering after the oembed request
 
