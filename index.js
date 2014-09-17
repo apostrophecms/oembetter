@@ -151,6 +151,7 @@ module.exports = function(options) {
 
   self.suggestedWhitelist = [
     'youtube.com',
+    'youtu.be',
     'blip.tv',
     'dailymotion.com',
     'flickr.com',

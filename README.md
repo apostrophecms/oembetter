@@ -165,6 +165,10 @@ oembetter.addFallback(function(url, options, callback) {
 });
 ```
 
+## Changelog
+
+0.1.3: added `youtu.be` to the suggested whitelist.
+
 ## About P'unk Avenue and Apostrophe
 
 `oembetter` was created at [P'unk Avenue](http://punkave.com) for use in many projects built with Apostrophe, an open-source content management system built on node.js. `oembetter` isn't mandatory for Apostrophe and vice versa, but they play very well together. If you like `oembetter` you should definitely [check out apostrophenow.org](http://apostrophenow.org).
