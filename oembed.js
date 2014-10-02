@@ -6,12 +6,22 @@ var cheerio = require('cheerio');
 
 var forceXml = false;
 
-module.exports = function(url, options, callback) {
+module.exports = oembed;
+
+// The _canonical option is used internally to prevent
+// infinite recursion when retrying with a canonical URL.
+// Don't worry about it in your code.
+
+function oembed(url, options, mainCallback, _canonical) {
   var oUrl;
   var result;
   return async.series({
     discover: function(callback) {
-      return request(url, function(err, response, body) {
+      return request(url, {
+          headers: {
+            'User-Agent': 'oembetter'
+          }
+        }, function(err, response, body) {
         if (err) {
           return callback(err);
         }
@@ -23,6 +33,14 @@ module.exports = function(url, options, callback) {
           oUrl = $('link[type="application/xml+oembed"]').attr('href');
         }
         if (!oUrl) {
+          if (!_canonical) {
+            // No oembed information here, however if
+            // there is a canonical URL retry with that instead
+            var canonical = $('link[rel="canonical"]').attr('href');
+            if (canonical && (canonical !== url)) {
+              return oembed(canonical, options, mainCallback, true);
+            }
+          }
           return callback(new Error('no oembed discovery information available'));
         }
         return callback(null);
@@ -68,9 +86,9 @@ module.exports = function(url, options, callback) {
     }
   }, function(err) {
     if (err) {
-      return callback(err);
+      return mainCallback(err);
     }
-    return callback(null, result);
+    return mainCallback(null, result);
   });
 };
 

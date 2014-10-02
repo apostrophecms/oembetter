@@ -167,6 +167,10 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
+0.1.4: if the URL leads to a page with no oembed metadata, look for a `link rel="canonical"` tag and try that URL instead. Don't pursue this more than one step.
+
+Also, specify a user agent so that certain hosts don't give us watered-down HTML.
+
 0.1.3: added `youtu.be` to the suggested whitelist.
 
 ## About P'unk Avenue and Apostrophe
