@@ -19,6 +19,12 @@ module.exports = function(options) {
       callback = options;
       options = {};
     }
+    if (url.match(/^\/\//)) {
+      // Protocol-relative URLs are commonly found
+      // in markup these days and can be upgraded
+      // to https so that they work
+      url = 'https:' + url;
+    }
     var response;
     var warnings = [];
     if (self._whitelist) {
