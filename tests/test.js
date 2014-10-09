@@ -179,5 +179,12 @@ describe('oembetter', function() {
   it('suggested whitelist is available', function() {
     assert(Array.isArray(oembetter.suggestedWhitelist));
   });
+  it('non-http URLs fail up front with the appropriate error', function(done) {
+    oembetter.fetch('test://jiggypants.com/whatever', function(err, response) {
+      assert(err);
+      assert(err.message === 'oembetter: URL is neither http nor https: test://jiggypants.com/whatever');
+      return done();
+    });
+  });
 });
 

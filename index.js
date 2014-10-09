@@ -27,11 +27,15 @@ module.exports = function(options) {
     }
     var response;
     var warnings = [];
+    var parsed = urls.parse(url);
+    if (!parsed) {
+      return callback(new Error('oembetter: invalid URL: ' + url));
+    }
+    if ((parsed.protocol !== 'http:') && (parsed.protocol !== 'https:'))
+    {
+      return callback(new Error('oembetter: URL is neither http nor https: ' + url));
+    }
     if (self._whitelist) {
-      var parsed = urls.parse(url);
-      if (!parsed) {
-        return callback(new Error('oembetter: invalid URL: ' + url));
-      }
       var i;
       var good = false;
       for (i = 0; (i < self._whitelist.length); i++) {
