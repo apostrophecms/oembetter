@@ -28,10 +28,26 @@ function oembed(url, options, mainCallback, _canonical) {
         var $ = cheerio.load(body);
 
         // <link rel="alternate" type="application/json+oembed" href="http://www.youtube.com/oembed?format=json&amp;url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dzsl_auoGuy4" title="An Engineer&#39;s Guide to Cats 2.0 - The Sequel">
-        oUrl = $('link[type="application/json+oembed"]').attr('href');
-        if (!oUrl) {
-          oUrl = $('link[type="application/xml+oembed"]').attr('href');
+
+        // Allow for all the dumb stuff we've seen.
+        // (Only application/json+oembed and
+        // text/xmloembed are in the standard.)
+
+        var ideas = [
+          'link[type="application/json+oembed"]',
+          'link[type="text/json+oembed"]',
+          'link[type="application/xml+oembed"]',
+          'link[type="text/xml+oembed"]'
+        ];
+
+        var i;
+        for (i = 0; (i < ideas.length); i++) {
+          oUrl = $(ideas[i]).attr('href');
+          if (oUrl) {
+            break;
+          }
         }
+
         if (!oUrl) {
           if (!_canonical) {
             // No oembed information here, however if
