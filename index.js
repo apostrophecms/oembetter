@@ -175,7 +175,8 @@ module.exports = function(options) {
     'youtube.com',
     'dotsub.com',
     'yfrog.com',
-    'photobucket.com'
+    'photobucket.com',
+    'soundcloud.com'
   ];
 
   return self;
