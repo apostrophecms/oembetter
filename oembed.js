@@ -12,11 +12,24 @@ module.exports = oembed;
 // infinite recursion when retrying with a canonical URL.
 // Don't worry about it in your code.
 
-function oembed(url, options, mainCallback, _canonical) {
+function oembed(url, options, endpoint, mainCallback, _canonical) {
   var oUrl;
   var result;
   return async.series({
     discover: function(callback) {
+      // if we're being told the end point, use it
+      if (endpoint)
+      {
+        if (!options) {
+          options = {};
+        }
+
+        oUrl = endpoint;
+        options.url = url;
+        return callback(null);
+      }
+
+      // otherwise discover it
       return request(url, {
           headers: {
             'User-Agent': 'oembetter'
@@ -48,13 +61,14 @@ function oembed(url, options, mainCallback, _canonical) {
           }
         }
 
+
         if (!oUrl) {
           if (!_canonical) {
             // No oembed information here, however if
             // there is a canonical URL retry with that instead
             var canonical = $('link[rel="canonical"]').attr('href');
             if (canonical && (canonical !== url)) {
-              return oembed(canonical, options, mainCallback, true);
+              return oembed(canonical, options, endpoint, mainCallback, true);
             }
           }
           return callback(new Error('no oembed discovery information available'));
@@ -72,6 +86,9 @@ function oembed(url, options, mainCallback, _canonical) {
       if (options) {
         var parsed = urls.parse(oUrl);
         var keys = Object.keys(options);
+        if (!parsed.query) {
+          parsed.query = {};
+        }
         keys.forEach(function(key) {
           parsed.query[key] = options[key];
         });
