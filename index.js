@@ -176,7 +176,9 @@ module.exports = function(options) {
     'dotsub.com',
     'yfrog.com',
     'photobucket.com',
-    'soundcloud.com'
+    'soundcloud.com',
+    'instagram.com',
+    'twitter.com'
   ];
 
   return self;
