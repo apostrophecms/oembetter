@@ -190,6 +190,10 @@ module.exports = function(options) {
     'twitter.com'
   ];
 
+  self.suggestedEndpoints = [
+    {domain: 'instagram.com', endpoint: 'http://api.instagram.com/oembed' }
+  ];
+
   self.endpoints = function(_endpoints) {
     self._endpoints = _endpoints;
   };
