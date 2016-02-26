@@ -73,6 +73,14 @@ oembetter.endpoints([
 ]);
 ```
 
+There is also a list of suggested endpoints which you can elect to use:
+
+```javascript
+oembetter.endpoints(oembetter.suggestedEndpoints);
+```
+
+(Hint: you can concatenate an additional array with your own endpoints if desired.)
+
 ## Adding Filters
 
 ### Filtering before the oembed request
