@@ -63,6 +63,15 @@ For your convenience, there is a standard whitelist available. Use it at your ow
 oembetter.whitelist(oembetter.suggestedWhitelist);
 ```
 
+## Suggesting Endpoints
+
+Some services support `oembed` but aren't discoverable. You can tell oembetter where to point for the oembed api by passing in an array of endpoints. 
+
+```javascript
+oembetter.endpoints([
+  {domain: 'instagram.com', endpoint: 'http://api.instagram.com/oembed'}
+]);
+```
 
 ## Adding Filters
 

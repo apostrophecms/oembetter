@@ -48,6 +48,15 @@ module.exports = function(options) {
         return callback(new Error('oembetter: ' + url + ' is not in a whitelisted domain.'));
       }
     }
+    var endpoint = false;
+    if (self._endpoints) {
+      for (i = 0; i < self._endpoints.length; i++) {
+        if (self.inDomain(self._endpoints[i].domain, parsed.hostname)) {
+          endpoint = self._endpoints[i].endpoint;
+          break;
+        }
+      }
+    }
     return async.series({
       before: function(callback) {
         return async.eachSeries(self.before, function(before, callback) {
@@ -69,7 +78,7 @@ module.exports = function(options) {
           // Preempted by a before
           return callback(null);
         }
-        return oembed(url, options, function (err, result) {
+        return oembed(url, options, endpoint, function (err, result) {
           response = result;
           if (err) {
             // not necessarily fatal
@@ -180,6 +189,14 @@ module.exports = function(options) {
     'instagram.com',
     'twitter.com'
   ];
+
+  self.suggestedEndpoints = [
+    {domain: 'instagram.com', endpoint: 'http://api.instagram.com/oembed' }
+  ];
+
+  self.endpoints = function(_endpoints) {
+    self._endpoints = _endpoints;
+  };
 
   return self;
 };
