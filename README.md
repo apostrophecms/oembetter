@@ -167,6 +167,8 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
+0.1.9: the new `endpoints` option allows you to configure custom oembed API endpoints for services that don't advertise an endpoint or advertise it incorrectly.
+
 0.1.7-0.1.8: support SoundCloud. Added it to the suggested whitelist and added tolerance for their incorrect JSON content type.
 
 0.1.6: security improvement: reject all URLs that are not `http:` or `https:` completely, right up front. This means you don't have to protect against these obvious hacks in your `before` and `after` handlers.
