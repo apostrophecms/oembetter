@@ -94,7 +94,11 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
         });
         oUrl = urls.format(parsed);
       }
-      return request(oUrl, function(err, response, body) {
+      return request(oUrl, {
+          headers: {
+            'User-Agent': 'oembetter'
+          }
+        }, function(err, response, body) {
         if (err) {
           return callback(err);
         }
