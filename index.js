@@ -39,6 +39,9 @@ module.exports = function(options) {
       var i;
       var good = false;
       for (i = 0; (i < self._whitelist.length); i++) {
+        if (!parsed.hostname) {
+          continue;
+        }
         if (self.inDomain(self._whitelist[i], parsed.hostname)) {
           good = true;
           break;
@@ -51,6 +54,9 @@ module.exports = function(options) {
     var endpoint = false;
     if (self._endpoints) {
       for (i = 0; i < self._endpoints.length; i++) {
+        if (!parsed.hostname) {
+          continue;
+        }
         if (self.inDomain(self._endpoints[i].domain, parsed.hostname)) {
           endpoint = self._endpoints[i].endpoint;
           break;

@@ -184,6 +184,8 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
+0.1.11: don't crash when evaluating whitelists if `parsed.hostname` somehow manages not to be set.
+
 0.1.10: user agent string to please Facebook. Thanks to `equinox7`.
 
 0.1.9: the new `endpoints` option allows you to configure custom oembed API endpoints for services that don't advertise an endpoint or advertise it incorrectly.
