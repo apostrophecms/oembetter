@@ -70,7 +70,7 @@ oembetter.addFallback(function(url, options, callback) {
 
 describe('oembetter', function() {
   // youtube oembed can be sluggish
-  this.timeout(5000);
+  this.timeout(10000);
   it('should be an object', function() {
     assert(oembetter);
   });
