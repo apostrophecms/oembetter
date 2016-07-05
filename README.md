@@ -184,6 +184,10 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
+0.1.13: relative URLs work with discovery. Thanks to Alejandro Torrado.
+
+0.1.12: (unchanged, npm publishing issue)
+
 0.1.11: don't crash when evaluating whitelists if `parsed.hostname` somehow manages not to be set.
 
 0.1.10: user agent string to please Facebook. Thanks to `equinox7`.
