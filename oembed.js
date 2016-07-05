@@ -57,6 +57,7 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
         for (i = 0; (i < ideas.length); i++) {
           oUrl = $(ideas[i]).attr('href');
           if (oUrl) {
+            oUrl = urls.resolve(response.request.href, oUrl);
             break;
           }
         }
