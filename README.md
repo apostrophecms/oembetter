@@ -184,6 +184,8 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
+0.1.14: bumped `cheerio` dependency to fix deprecation warnings. No behavior changes.
+
 0.1.13: relative URLs work with discovery. Thanks to Alejandro Torrado.
 
 0.1.12: (unchanged, npm publishing issue)
