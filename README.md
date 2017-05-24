@@ -69,7 +69,8 @@ Some services support `oembed` but aren't discoverable. You can tell oembetter w
 
 ```javascript
 oembetter.endpoints([
-  {domain: 'instagram.com', endpoint: 'http://api.instagram.com/oembed'}
+  { domain: 'instagram.com', endpoint: 'http://api.instagram.com/oembed' },
+  { domain: 'facebook.com', path: /\/videos\//, endpoint: 'https://www.facebook.com/plugins/video/oembed.json/' },
 ]);
 ```
 
@@ -183,6 +184,8 @@ oembetter.addFallback(function(url, options, callback) {
 ```
 
 ## Changelog
+
+0.1.15: whitelisted `facebook.com`, which has extensive oembed these days.
 
 0.1.14: bumped `cheerio` dependency to fix deprecation warnings. No behavior changes.
 

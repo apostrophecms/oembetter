@@ -15,6 +15,7 @@ module.exports = function(options) {
   self.fallback = filters.fallback.concat(options.fallback || []);
 
   self.fetch = function(url, options, callback) {
+    var i;
     if (arguments.length === 2) {
       callback = options;
       options = {};
@@ -36,7 +37,6 @@ module.exports = function(options) {
       return callback(new Error('oembetter: URL is neither http nor https: ' + url));
     }
     if (self._whitelist) {
-      var i;
       var good = false;
       for (i = 0; (i < self._whitelist.length); i++) {
         if (!parsed.hostname) {
@@ -57,10 +57,16 @@ module.exports = function(options) {
         if (!parsed.hostname) {
           continue;
         }
-        if (self.inDomain(self._endpoints[i].domain, parsed.hostname)) {
-          endpoint = self._endpoints[i].endpoint;
-          break;
+        if (!self.inDomain(self._endpoints[i].domain, parsed.hostname)) {
+          continue;
         }
+        if (self._endpoints[i].path) {
+          if ((!parsed.pathname) || (!parsed.pathname.match(self._endpoints[i].path))) {
+            continue;
+          }
+        }
+        endpoint = self._endpoints[i].endpoint;
+        break;
       }
     }
     return async.series({
@@ -193,11 +199,14 @@ module.exports = function(options) {
     'photobucket.com',
     'soundcloud.com',
     'instagram.com',
-    'twitter.com'
+    'twitter.com',
+    'facebook.com'
   ];
 
   self.suggestedEndpoints = [
-    {domain: 'instagram.com', endpoint: 'http://api.instagram.com/oembed' }
+    { domain: 'instagram.com', endpoint: 'http://api.instagram.com/oembed' },
+    { domain: 'facebook.com', path: /\/videos\//, endpoint: 'https://www.facebook.com/plugins/video/oembed.json/' },
+    { domain: 'facebook.com', path: /\/posts\//, endpoint: 'https://www.facebook.com/plugins/post/oembed.json/' }
   ];
 
   self.endpoints = function(_endpoints) {

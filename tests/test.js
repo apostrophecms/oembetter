@@ -186,5 +186,23 @@ describe('oembetter', function() {
       return done();
     });
   });
+  it('We can set the suggested endpoints and whitelist', function() {
+    oembetter.whitelist(oembetter.suggestedWhitelist);
+    oembetter.endpoints(oembetter.suggestedEndpoints);
+  });
+  it('Taylor Swift video comes through as type video', function(done) {
+    oembetter.fetch('https://www.facebook.com/TaylorSwift/videos/10153629261480369/', function(err, response) {
+      assert(!err);
+      assert(response.type === 'video');
+      return done();
+    });
+  });
+  it('Zuck photo post comes through as rich', function(done) {
+    oembetter.fetch('https://www.facebook.com/photo.php?fbid=10103741991850131&set=a.529237706231.2034669.4&type=3&theater', function(err, response) {
+      assert(!err);
+      assert(response.type === 'rich');
+      return done();
+    });
+  });
 });
 
