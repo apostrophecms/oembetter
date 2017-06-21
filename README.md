@@ -45,7 +45,7 @@ oembetter.fetch(url, function(err, { maxwidth: 480, maxheight: 480 }, response) 
 ```
 
 
-## Imporant security note: whitelisting
+## Important security note: whitelisting
 
 **Trusting `oembed` completely isn't safe for your users,** especially if you are allowing untrusted users to embed things. The HTML returned by third party sites could do nasty things like running JavaScript that sniffs user sessions or just displaying a fake login prompt.
 
