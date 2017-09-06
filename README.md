@@ -185,7 +185,9 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
-0.1.16: Built in filter that handles Facebook oembed responses
+0.1.17: Facebook oembed filter works regardless of whether Facebook's API has been initialized yet or not.
+
+0.1.16: Built in filter that handles Facebook oembed responses.
 
 0.1.15: whitelisted `facebook.com`, which has extensive oembed these days.
 
