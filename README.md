@@ -65,7 +65,7 @@ oembetter.whitelist(oembetter.suggestedWhitelist);
 
 ## Suggesting Endpoints
 
-Some services support `oembed` but aren't discoverable. You can tell oembetter where to point for the oembed api by passing in an array of endpoints. 
+Some services support `oembed` but aren't discoverable. You can tell oembetter where to point for the oembed api by passing in an array of endpoints.
 
 ```javascript
 oembetter.endpoints([
@@ -184,6 +184,8 @@ oembetter.addFallback(function(url, options, callback) {
 ```
 
 ## Changelog
+
+0.1.16: Built in filter that handles Facebook oembed responses
 
 0.1.15: whitelisted `facebook.com`, which has extensive oembed these days.
 

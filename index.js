@@ -4,6 +4,7 @@ var filters = require('./filters.js');
 var urls = require('url');
 
 module.exports = function(options) {
+
   var self = {};
 
   if (!options) {
@@ -20,6 +21,7 @@ module.exports = function(options) {
       callback = options;
       options = {};
     }
+
     if (url.match(/^\/\//)) {
       // Protocol-relative URLs are commonly found
       // in markup these days and can be upgraded
@@ -91,6 +93,7 @@ module.exports = function(options) {
           return callback(null);
         }
         return oembed(url, options, endpoint, function (err, result) {
+
           response = result;
           if (err) {
             // not necessarily fatal
@@ -145,6 +148,7 @@ module.exports = function(options) {
           return callback(warnings[0], warnings);
         }
       }
+
       // If there is a response, make the warnings available as the
       // third argument
       return callback(null, response, warnings);
@@ -215,4 +219,3 @@ module.exports = function(options) {
 
   return self;
 };
-
