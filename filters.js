@@ -2,6 +2,8 @@ var request = require('request');
 
 module.exports = {
   before: [],
-  after: [],
+  after: [
+    require('./lib/fb.js')
+  ],
   fallback: []
 };
