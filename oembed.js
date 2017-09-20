@@ -100,8 +100,8 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
             'User-Agent': 'oembetter'
           }
         }, function(err, response, body) {
-        if (err) {
-          return callback(err);
+        if (err || (response.statusCode >= 400)) {
+          return callback(err || response.statusCode);
         }
         if (body[0] === '<') {
           return xml2js.parseString(body, { explicitArray: false }, function(err, _result) {
@@ -117,8 +117,12 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
             return callback(null);
           });
         } else {
-          result = JSON.parse(body);
-          return callback(null);
+          try {
+            result = JSON.parse(body);
+            return callback(null);
+          } catch (e) {
+            return callback(e);
+          }
         }
       });
     }
