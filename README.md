@@ -185,6 +185,8 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
+0.1.19: unnecessary Facebook API logic was running on non-Facebook embeds due to a syntax mistake in 0.1.17.
+
 0.1.18: report HTTP errors properly rather than attempting to parse a nonexistent JSON body. Also, always try/catch when parsing JSON and report the exception as the callback error if necessary.
 
 0.1.17: Facebook oembed filter works regardless of whether Facebook's API has been initialized yet or not.
