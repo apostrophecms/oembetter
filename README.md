@@ -36,7 +36,7 @@ You can pass an object containing `maxwidth` and `maxheight` options. Sites vary
 ```javascript
 var oembetter = require('oembetter')();
 
-oembetter.fetch(url, function(err, { maxwidth: 480, maxheight: 480 }, response) {
+oembetter.fetch(url, { maxwidth: 480, maxheight: 480 }, function(err, response) {
   if (!err) {
     // response.html contains markup to embed the video or
     // whatever it might be
