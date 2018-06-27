@@ -1,3 +1,5 @@
+# worse than cancer in an npm package, unless maybe it has binaries
+package-lock.json
 npm-debug.log
 *.DS_Store
 node_modules
