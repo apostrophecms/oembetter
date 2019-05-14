@@ -1,6 +1,6 @@
 # oembetter
 
-<a href="http://apostrophenow.org/"><img src="https://raw.github.com/punkave/oembetter/master/logos/logo-box-madefor.png" align="right" /></a>
+<a href="https://apostrophecms.org/"><img src="https://raw.github.com/punkave/oembetter/master/logos/logo-box-madefor.png" align="right" /></a>
 
 `oembetter` is a modern [oembed](http://oembed.com) client which allows you to add filters that provide or improve oembed support for services that either don't have it or don't do it very well.
 
@@ -185,6 +185,8 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
+0.1.21: Updated links and information in the README.
+
 0.1.20: fixed a nuisance error that was appearing when Facebook was present but `window` was not the default object.
 
 0.1.19: unnecessary Facebook API logic was running on non-Facebook embeds due to a syntax mistake in 0.1.17.
@@ -221,6 +223,6 @@ Also, specify a user agent so that certain hosts don't give us watered-down HTML
 
 0.1.3: added `youtu.be` to the suggested whitelist.
 
-## About P'unk Avenue and Apostrophe
+## About P'unk Avenue and ApostropheCMS
 
-`oembetter` was created at [P'unk Avenue](http://punkave.com) for use in many projects built with Apostrophe, an open-source content management system built on node.js. `oembetter` isn't mandatory for Apostrophe and vice versa, but they play very well together. If you like `oembetter` you should definitely [check out apostrophenow.org](http://apostrophenow.org).
+`oembetter` was created at [P'unk Avenue](http://punkave.com) for use in many projects built with ApostropheCMS, an open-source content management system built on node.js. `oembetter` isn't mandatory for Apostrophe and vice versa, but they play very well together. If you like `oembetter` you should definitely [check out apostrophecms.org](https://apostrophecms.org/).
