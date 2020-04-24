@@ -185,6 +185,8 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
+0.1.22: fixed URL parsing bugs impacting use of preconfigured endpoints that already contain some query string parameters.
+
 0.1.21: Updated links and information in the README.
 
 0.1.20: fixed a nuisance error that was appearing when Facebook was present but `window` was not the default object.

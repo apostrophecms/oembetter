@@ -85,7 +85,9 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
         oUrl = oUrl.replace('json', 'xml');
       }
       if (options) {
-        var parsed = urls.parse(oUrl);
+        // make sure parsed.query is an object by passing true as
+        // second argument
+        var parsed = urls.parse(oUrl, true);
         var keys = Object.keys(options);
         if (!parsed.query) {
           parsed.query = {};
@@ -93,6 +95,10 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
         keys.forEach(function(key) {
           parsed.query[key] = options[key];
         });
+        // Clean up things url.format defaults to if they are already there,
+        // ensuring that parsed.query is actually used
+        delete parsed.href;
+        delete parsed.search;
         oUrl = urls.format(parsed);
       }
       return request(oUrl, {
@@ -100,6 +106,7 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
             'User-Agent': 'oembetter'
           }
         }, function(err, response, body) {
+        console.log('** response for ' + oUrl + ' is ', err, response.statusCode, body);
         if (err || (response.statusCode >= 400)) {
           return callback(err || response.statusCode);
         }
