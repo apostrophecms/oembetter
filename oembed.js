@@ -106,7 +106,6 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
             'User-Agent': 'oembetter'
           }
         }, function(err, response, body) {
-        console.log('** response for ' + oUrl + ' is ', err, response.statusCode, body);
         if (err || (response.statusCode >= 400)) {
           return callback(err || response.statusCode);
         }
