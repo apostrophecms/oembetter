@@ -74,8 +74,8 @@ describe('oembetter', function() {
   it('should be an object', function() {
     assert(oembetter);
   });
-  it('should return no response gracefully for boutell.com', function(done) {
-    oembetter.fetch('http://boutell.com/', function(err, response) {
+  it('should return no response gracefully for apostrophecms.com', function(done) {
+    oembetter.fetch('http://apostrophecms.com/', function(err, response) {
       assert(err);
       return done();
     });
@@ -189,20 +189,6 @@ describe('oembetter', function() {
   it('We can set the suggested endpoints and whitelist', function() {
     oembetter.whitelist(oembetter.suggestedWhitelist);
     oembetter.endpoints(oembetter.suggestedEndpoints);
-  });
-  it('Taylor Swift video comes through as type video', function(done) {
-    oembetter.fetch('https://www.facebook.com/TaylorSwift/videos/10153629261480369/', function(err, response) {
-      assert(!err);
-      assert(response.type === 'video');
-      return done();
-    });
-  });
-  it('Zuck photo post comes through as rich', function(done) {
-    oembetter.fetch('https://www.facebook.com/photo.php?fbid=10103741991850131&set=a.529237706231.2034669.4&type=3&theater', function(err, response) {
-      assert(!err);
-      assert(response.type === 'rich');
-      return done();
-    });
   });
 });
 
