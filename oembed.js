@@ -58,6 +58,13 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
           oUrl = $(ideas[i]).attr('href');
           if (oUrl) {
             oUrl = urls.resolve(response.request.href, oUrl);
+            if (url.match(/^https:/) && oUrl.match(/^http:/)) {
+              // Fix for YouTube's bug 12/15/20: issuing HTTP discovery URLs
+              // but flunking them with a 403 when they arrive
+              if (oUrl.match(/youtube/) && oUrl.match(/^http:/)) {
+                oUrl = oUrl.replace(/^http:/, 'https:');
+              }
+            }
             break;
           }
         }
