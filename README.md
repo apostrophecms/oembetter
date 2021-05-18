@@ -185,7 +185,7 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
-0.2.0: renamed the `whitelist` and `suggestedWhitelist` properties to `allowlist` and `suggestedAllowlist`, respectively. The previous names are available as aliases.
+1.0.0: renamed the `whitelist` and `suggestedWhitelist` properties to `allowlist` and `suggestedAllowlist`, respectively.
 
 0.1.23: workaround for YouTube bug in which video pages contain `http:` recommendations for oembed URLs, but an `http:` request is rejected with a 403 error. Force `https:` for YouTube.
 

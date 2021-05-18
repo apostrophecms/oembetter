@@ -183,8 +183,6 @@ module.exports = function(options) {
   self.allowlist = function(_allowlist) {
     self._allowlist = _allowlist;
   };
-  // TODO: Remove alias in next major version.
-  self.whitelist = self.allowlist;
 
   self.suggestedAllowlist = [
     'youtube.com',
@@ -208,8 +206,6 @@ module.exports = function(options) {
     'twitter.com',
     'facebook.com'
   ];
-  // TODO: Remove alias in next major version.
-  self.suggestedWhitelist = self.suggestedAllowlist;
 
   self.suggestedEndpoints = [
     { domain: 'instagram.com', endpoint: 'http://api.instagram.com/oembed' },
