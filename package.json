@@ -1,6 +1,6 @@
 {
   "name": "oembetter",
-  "version": "0.1.23",
+  "version": "0.2.0",
   "description": "A modern oembed client. Allows you to register filters to improve or supply oembed support for sites that don't normally have it. You can also supply a whitelist of services you trust to prevent XSS attacks.",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/punkave/oembetter"
+    "url": "https://github.com/apostrophecms/oembetter"
   },
   "keywords": [
     "oembed",
@@ -16,12 +16,12 @@
     "media",
     "embed"
   ],
-  "author": "P'unk Avenue LLC",
+  "author": "Apostrophe Technologies",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/punkave/oembetter/issues"
+    "url": "https://github.com/apostrophecms/oembetter/issues"
   },
-  "homepage": "https://github.com/punkave/oembetter",
+  "homepage": "https://github.com/apostrophecms/oembetter",
   "dependencies": {
     "async": "^0.9.0",
     "cheerio": "^0.22.0",

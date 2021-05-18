@@ -38,19 +38,19 @@ module.exports = function(options) {
     {
       return callback(new Error('oembetter: URL is neither http nor https: ' + url));
     }
-    if (self._whitelist) {
+    if (self._allowlist) {
       var good = false;
-      for (i = 0; (i < self._whitelist.length); i++) {
+      for (i = 0; (i < self._allowlist.length); i++) {
         if (!parsed.hostname) {
           continue;
         }
-        if (self.inDomain(self._whitelist[i], parsed.hostname)) {
+        if (self.inDomain(self._allowlist[i], parsed.hostname)) {
           good = true;
           break;
         }
       }
       if (!good) {
-        return callback(new Error('oembetter: ' + url + ' is not in a whitelisted domain.'));
+        return callback(new Error('oembetter: ' + url + ' is not in an allowed domain.'));
       }
     }
     var endpoint = false;
@@ -180,11 +180,13 @@ module.exports = function(options) {
     return false;
   };
 
-  self.whitelist = function(_whitelist) {
-    self._whitelist = _whitelist;
+  self.allowlist = function(_allowlist) {
+    self._allowlist = _allowlist;
   };
+  // TODO: Remove alias in next major version.
+  self.whitelist = self.allowlist;
 
-  self.suggestedWhitelist = [
+  self.suggestedAllowlist = [
     'youtube.com',
     'youtu.be',
     'blip.tv',
@@ -206,6 +208,8 @@ module.exports = function(options) {
     'twitter.com',
     'facebook.com'
   ];
+  // TODO: Remove alias in next major version.
+  self.suggestedWhitelist = self.suggestedAllowlist;
 
   self.suggestedEndpoints = [
     { domain: 'instagram.com', endpoint: 'http://api.instagram.com/oembed' },

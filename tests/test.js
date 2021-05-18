@@ -159,8 +159,10 @@ describe('oembetter', function() {
       return done();
     });
   });
-  it('setting whitelist does not crash', function() {
-    oembetter.whitelist([ 'jiggypants.com' ]);
+  it('setting allowlist does not crash', function() {
+    oembetter.allowlist([ 'jiggypants.com' ]);
+    // `allowlist` method is available on an alias.
+    assert.strictEqual(oembetter.whitelist([ 'jiggypants.com' ]), oembetter.allowlist([ 'jiggypants.com' ]));
   });
   it('whitelisted domains work', function(done) {
     oembetter.fetch('http://jiggypants.com/whatever', function(err, response) {
@@ -176,8 +178,12 @@ describe('oembetter', function() {
       return done();
     });
   });
-  it('suggested whitelist is available', function() {
+  it('suggested allowlist is available', function() {
+    assert(Array.isArray(oembetter.suggestedAllowlist));
+  });
+  it('allowlist is available with alias', function() {
     assert(Array.isArray(oembetter.suggestedWhitelist));
+    assert.strictEqual(oembetter.suggestedWhitelist.length, oembetter.suggestedAllowlist.length);
   });
   it('non-http URLs fail up front with the appropriate error', function(done) {
     oembetter.fetch('test://jiggypants.com/whatever', function(err, response) {
@@ -187,7 +193,7 @@ describe('oembetter', function() {
     });
   });
   it('We can set the suggested endpoints and whitelist', function() {
-    oembetter.whitelist(oembetter.suggestedWhitelist);
+    oembetter.allowlist(oembetter.suggestedAllowlist);
     oembetter.endpoints(oembetter.suggestedEndpoints);
   });
 });
