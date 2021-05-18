@@ -44,6 +44,23 @@ oembetter.fetch(url, { maxwidth: 480, maxheight: 480 }, function(err, response) 
 });
 ```
 
+## Usage with custom headers
+
+You may pass on custom headers to be included in all HTTP requests made by oembetter. `Referer` is particularly useful to ensure that Vimeo allows you to embed videos when they are private and embedding is restricted on a per-domain basis:
+
+```javascript
+var oembetter = require('oembetter')();
+
+oembetter.fetch('https://vimeo.com/abc/def', {
+  headers: {
+    'Referer': 'https://example.com'
+  }
+}, function(err, response) {
+  if (!err) {
+    // response.html contains markup to embed the video
+  }
+});
+```
 
 ## Important security note: allowlisting
 
@@ -185,7 +202,7 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
-1.0.0: renamed the `whitelist` and `suggestedWhitelist` properties to `allowlist` and `suggestedAllowlist`, respectively.
+1.0.0: renamed the `whitelist` and `suggestedWhitelist` properties to `allowlist` and `suggestedAllowlist`, respectively. Also introduced support for `options.headers`.
 
 0.1.23: workaround for YouTube bug in which video pages contain `http:` recommendations for oembed URLs, but an `http:` request is rejected with a 403 error. Force `https:` for YouTube.
 

@@ -31,9 +31,9 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
 
       // otherwise discover it
       return request(url, {
-          headers: {
+          headers: Object.assign({
             'User-Agent': 'oembetter'
-          }
+          }, options.headers || {})
         }, function(err, response, body) {
         if (err) {
           return callback(err);
@@ -100,7 +100,9 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
           parsed.query = {};
         }
         keys.forEach(function(key) {
-          parsed.query[key] = options[key];
+          if (key !== 'headers') {
+            parsed.query[key] = options[key];
+          }
         });
         // Clean up things url.format defaults to if they are already there,
         // ensuring that parsed.query is actually used
@@ -109,9 +111,9 @@ function oembed(url, options, endpoint, mainCallback, _canonical) {
         oUrl = urls.format(parsed);
       }
       return request(oUrl, {
-          headers: {
+          headers: Object.assign({
             'User-Agent': 'oembetter'
-          }
+          }, options.headers || {})
         }, function(err, response, body) {
         if (err || (response.statusCode >= 400)) {
           return callback(err || response.statusCode);

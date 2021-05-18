@@ -190,5 +190,21 @@ describe('oembetter', function() {
     oembetter.allowlist(oembetter.suggestedAllowlist);
     oembetter.endpoints(oembetter.suggestedEndpoints);
   });
+  if (process.env.VIMEO_PRIVATE_URL) {
+    it('Can embed vimeo private video with full metadata', function(done) {
+      oembetter.fetch(process.env.VIMEO_PRIVATE_URL, {
+        headers: {
+          Referer: process.env.VIMEO_PRIVATE_REFERER
+        }
+      }, function(err, response) {
+        assert(!err);
+        assert(response);
+        assert(response.html);
+        assert(response.thumbnail_url);
+        result = response;
+        done();
+      });
+    });
+  }
 });
 
