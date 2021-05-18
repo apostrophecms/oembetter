@@ -6,7 +6,7 @@
 
 `oembetter` fully supports the `oembed` standard including both XML and JSON responses from servers, and delivers the result as a neatly parsed JavaScript object.
 
-`oembetter` also allows you to whitelist trusted `oembed` domains. We strongly recommend this to prevent session cookie theft and other attacks.
+`oembetter` also allows you to allowlist trusted `oembed` domains. We strongly recommend this to prevent session cookie theft and other attacks.
 
 `oembetter` intentionally sticks to the oembed standard so you can use it to implement straightforward proxies that provide "better oembed."
 
@@ -45,22 +45,22 @@ oembetter.fetch(url, { maxwidth: 480, maxheight: 480 }, function(err, response) 
 ```
 
 
-## Important security note: whitelisting
+## Important security note: allowlisting
 
 **Trusting `oembed` completely isn't safe for your users,** especially if you are allowing untrusted users to embed things. The HTML returned by third party sites could do nasty things like running JavaScript that sniffs user sessions or just displaying a fake login prompt.
 
-But sites like YouTube, Vimeo and Flickr do play nicely with others. So we use a whitelist to decide which domains are OK:
+But sites like YouTube, Vimeo and Flickr do play nicely with others. So we use a allowlist to decide which domains are OK:
 
 ```javascript
-oembetter.whitelist([ 'youtube.com', 'vimeo.com', 'wufoo.com' ]);
+oembetter.allowlist([ 'youtube.com', 'vimeo.com', 'wufoo.com' ]);
 ```
 
 Just list acceptable domain names and `oembetter` will make sure URLs are in one of those domains (or a subdomain) before doing anything else. If not, an error is delivered to the callback.
 
-For your convenience, there is a standard whitelist available. Use it at your own risk:
+For your convenience, there is a standard allowlist available. Use it at your own risk:
 
 ```javascript
-oembetter.whitelist(oembetter.suggestedWhitelist);
+oembetter.allowlist(oembetter.suggestedAllowlist);
 ```
 
 ## Suggesting Endpoints
@@ -185,6 +185,8 @@ oembetter.addFallback(function(url, options, callback) {
 
 ## Changelog
 
+1.0.0: renamed the `whitelist` and `suggestedWhitelist` properties to `allowlist` and `suggestedAllowlist`, respectively.
+
 0.1.23: workaround for YouTube bug in which video pages contain `http:` recommendations for oembed URLs, but an `http:` request is rejected with a 403 error. Force `https:` for YouTube.
 
 0.1.22: fixed URL parsing bugs impacting use of preconfigured endpoints that already contain some query string parameters.
@@ -201,7 +203,7 @@ oembetter.addFallback(function(url, options, callback) {
 
 0.1.16: Built in filter that handles Facebook oembed responses.
 
-0.1.15: whitelisted `facebook.com`, which has extensive oembed these days.
+0.1.15: allowlisted `facebook.com`, which has extensive oembed these days.
 
 0.1.14: bumped `cheerio` dependency to fix deprecation warnings. No behavior changes.
 
@@ -209,13 +211,13 @@ oembetter.addFallback(function(url, options, callback) {
 
 0.1.12: (unchanged, npm publishing issue)
 
-0.1.11: don't crash when evaluating whitelists if `parsed.hostname` somehow manages not to be set.
+0.1.11: don't crash when evaluating allowlists if `parsed.hostname` somehow manages not to be set.
 
 0.1.10: user agent string to please Facebook. Thanks to `equinox7`.
 
 0.1.9: the new `endpoints` option allows you to configure custom oembed API endpoints for services that don't advertise an endpoint or advertise it incorrectly.
 
-0.1.7-0.1.8: support SoundCloud. Added it to the suggested whitelist and added tolerance for their incorrect JSON content type.
+0.1.7-0.1.8: support SoundCloud. Added it to the suggested allowlist and added tolerance for their incorrect JSON content type.
 
 0.1.6: security improvement: reject all URLs that are not `http:` or `https:` completely, right up front. This means you don't have to protect against these obvious hacks in your `before` and `after` handlers.
 
@@ -225,8 +227,8 @@ oembetter.addFallback(function(url, options, callback) {
 
 Also, specify a user agent so that certain hosts don't give us watered-down HTML.
 
-0.1.3: added `youtu.be` to the suggested whitelist.
+0.1.3: added `youtu.be` to the suggested allowlist.
 
 ## About P'unk Avenue and ApostropheCMS
 
-`oembetter` was created at [P'unk Avenue](http://punkave.com) for use in many projects built with ApostropheCMS, an open-source content management system built on node.js. `oembetter` isn't mandatory for Apostrophe and vice versa, but they play very well together. If you like `oembetter` you should definitely [check out apostrophecms.org](https://apostrophecms.org/).
+`oembetter` was created at [P'unk Avenue](http://punkave.com) for use in many projects built with ApostropheCMS, an open-source content management system built on node.js. `oembetter` isn't mandatory for Apostrophe and vice versa, but they play very well together. If you like `oembetter` you should definitely [check out Apostrophe](https://apostrophecms.com/).

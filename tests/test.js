@@ -159,10 +159,10 @@ describe('oembetter', function() {
       return done();
     });
   });
-  it('setting whitelist does not crash', function() {
-    oembetter.whitelist([ 'jiggypants.com' ]);
+  it('setting allowlist does not crash', function() {
+    oembetter.allowlist([ 'jiggypants.com' ]);
   });
-  it('whitelisted domains work', function(done) {
+  it('allowlisted domains work', function(done) {
     oembetter.fetch('http://jiggypants.com/whatever', function(err, response) {
       assert(!err);
       assert(response);
@@ -170,14 +170,14 @@ describe('oembetter', function() {
       return done();
     });
   });
-  it('unwhitelisted domains do not work', function(done) {
+  it('does not allow domains not on the allowlist', function(done) {
     oembetter.fetch('http://wiggypants.com/whatever', function(err, response) {
       assert(err);
       return done();
     });
   });
-  it('suggested whitelist is available', function() {
-    assert(Array.isArray(oembetter.suggestedWhitelist));
+  it('suggested allowlist is available', function() {
+    assert(Array.isArray(oembetter.suggestedAllowlist));
   });
   it('non-http URLs fail up front with the appropriate error', function(done) {
     oembetter.fetch('test://jiggypants.com/whatever', function(err, response) {
@@ -186,8 +186,8 @@ describe('oembetter', function() {
       return done();
     });
   });
-  it('We can set the suggested endpoints and whitelist', function() {
-    oembetter.whitelist(oembetter.suggestedWhitelist);
+  it('We can set the suggested endpoints and allowlist', function() {
+    oembetter.allowlist(oembetter.suggestedAllowlist);
     oembetter.endpoints(oembetter.suggestedEndpoints);
   });
 });
