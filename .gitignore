@@ -1,4 +1,4 @@
-# worse than cancer in an npm package, unless maybe it has binaries
+# Exclude the lock file so dependencies stay up-to-date.
 package-lock.json
 npm-debug.log
 *.DS_Store

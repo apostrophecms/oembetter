@@ -24,7 +24,7 @@
   "homepage": "https://github.com/apostrophecms/oembetter",
   "dependencies": {
     "async": "^0.9.0",
-    "cheerio": "^0.22.0",
+    "cheerio": "^1.0.0-rc.10",
     "request": "^2.37.0",
     "urls": "0.0.4",
     "xml2js": "^0.4.4"
