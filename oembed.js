@@ -1,10 +1,11 @@
-var request = require('request');
-var urls = require('url');
-var xml2js = require('xml2js');
-var async = require('async');
-var cheerio = require('cheerio');
+const fetch = require('node-fetch');
+const urls = require('url');
+const xml2js = require('xml2js');
+const async = require('async');
+const cheerio = require('cheerio');
+const util = require('util');
 
-var forceXml = false;
+let forceXml = false;
 
 module.exports = oembed;
 
@@ -12,145 +13,152 @@ module.exports = oembed;
 // infinite recursion when retrying with a canonical URL.
 // Don't worry about it in your code.
 
-function oembed(url, options, endpoint, mainCallback, _canonical) {
-  var oUrl;
-  var result;
-  return async.series({
-    discover: function(callback) {
-      // if we're being told the end point, use it
-      if (endpoint)
-      {
-        if (!options) {
-          options = {};
-        }
+async function oembed(url, options, endpoint, callback, _canonical) {
 
-        oUrl = endpoint;
-        options.url = url;
-        return callback(null);
+  try {
+    let result;
+    console.log('cd');
+    const { canonical, oUrl } = await discover();
+    console.log('ad');
+    if (canonical) {
+      console.log('canon');
+      return oembed(canonical, options, endpoint, mainCallback, true);
+    }
+    console.log('result');
+    return callback(null, await retrieve());
+  } catch (e) {
+    console.log('fail', e);
+    return callback(e);
+  }
+
+  async function discover() {
+    // if we're being told the end point, use it
+    if (endpoint)
+    {
+      if (!options) {
+        options = {};
       }
 
-      // otherwise discover it
-      return request(url, {
-          headers: Object.assign({
-            'User-Agent': 'oembetter'
-          }, options.headers || {})
-        }, function(err, response, body) {
-        if (err) {
-          return callback(err);
-        }
-        var $ = cheerio.load(body);
+      oUrl = endpoint;
+      options.url = url;
+      return { oUrl };
+    }
 
-        // <link rel="alternate" type="application/json+oembed" href="http://www.youtube.com/oembed?format=json&amp;url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dzsl_auoGuy4" title="An Engineer&#39;s Guide to Cats 2.0 - The Sequel">
+    // otherwise discover it
+    console.log('calling get');
+    const body = await get(url, {
+      headers: Object.assign({
+        'User-Agent': 'oembetter'
+      }, options.headers || {})
+    });
+    console.log('after get');
+    const $ = cheerio.load(body);
 
-        // Allow for all the dumb stuff we've seen.
-        // (Only application/json+oembed and
-        // text/xmloembed are in the standard.)
+    // <link rel="alternate" type="application/json+oembed" href="http://www.youtube.com/oembed?format=json&amp;url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dzsl_auoGuy4" title="An Engineer&#39;s Guide to Cats 2.0 - The Sequel">
 
-        var ideas = [
-          'link[type="application/json+oembed"]',
-          'link[type="text/json+oembed"]',
-          'link[type="application/xml+oembed"]',
-          'link[type="text/xml+oembed"]'
-        ];
+    // Allow for all the dumb stuff we've seen.
+    // (Only application/json+oembed and
+    // text/xmloembed are in the standard.)
 
-        var i;
-        for (i = 0; (i < ideas.length); i++) {
-          oUrl = $(ideas[i]).attr('href');
-          if (oUrl) {
-            oUrl = urls.resolve(response.request.href, oUrl);
-            if (url.match(/^https:/) && oUrl.match(/^http:/)) {
-              // Fix for YouTube's bug 12/15/20: issuing HTTP discovery URLs
-              // but flunking them with a 403 when they arrive
-              if (oUrl.match(/youtube/) && oUrl.match(/^http:/)) {
-                oUrl = oUrl.replace(/^http:/, 'https:');
-              }
-            }
-            break;
+    const ideas = [
+      'link[type="application/json+oembed"]',
+      'link[type="text/json+oembed"]',
+      'link[type="application/xml+oembed"]',
+      'link[type="text/xml+oembed"]'
+    ];
+
+    for (let i = 0; (i < ideas.length); i++) {
+      oUrl = $(ideas[i]).attr('href');
+      if (oUrl) {
+        oUrl = urls.resolve(response.request.href, oUrl);
+        if (url.match(/^https:/) && oUrl.match(/^http:/)) {
+          // Fix for YouTube's bug 12/15/20: issuing HTTP discovery URLs
+          // but flunking them with a 403 when they arrive
+          if (oUrl.match(/youtube/) && oUrl.match(/^http:/)) {
+            oUrl = oUrl.replace(/^http:/, 'https:');
           }
         }
-
-
-        if (!oUrl) {
-          if (!_canonical) {
-            // No oembed information here, however if
-            // there is a canonical URL retry with that instead
-            var canonical = $('link[rel="canonical"]').attr('href');
-            if (canonical && (canonical !== url)) {
-              return oembed(canonical, options, endpoint, mainCallback, true);
-            }
-          }
-          return callback(new Error('no oembed discovery information available'));
-        }
-        return callback(null);
-      });
-    },
-    fetch: function(callback) {
-      // Just for testing - a lot of modern services
-      // default to JSON and we want to make sure we
-      // still test XML too
-      if (forceXml) {
-        oUrl = oUrl.replace('json', 'xml');
+        break;
       }
-      if (options) {
-        // make sure parsed.query is an object by passing true as
-        // second argument
-        var parsed = urls.parse(oUrl, true);
-        var keys = Object.keys(options);
-        if (!parsed.query) {
-          parsed.query = {};
+    }
+
+
+    if (!oUrl) {
+      if (!_canonical) {
+        // No oembed information here, however if
+        // there is a canonical URL retry with that instead
+        const canonical = $('link[rel="canonical"]').attr('href');
+        if (canonical && (canonical !== url)) {
+          return { canonical };
         }
-        keys.forEach(function(key) {
-          if (key !== 'headers') {
-            parsed.query[key] = options[key];
-          }
-        });
-        // Clean up things url.format defaults to if they are already there,
-        // ensuring that parsed.query is actually used
-        delete parsed.href;
-        delete parsed.search;
-        oUrl = urls.format(parsed);
       }
-      return request(oUrl, {
-          headers: Object.assign({
-            'User-Agent': 'oembetter'
-          }, options.headers || {})
-        }, function(err, response, body) {
-        if (err || (response.statusCode >= 400)) {
-          return callback(err || response.statusCode);
-        }
-        if (body[0] === '<') {
-          return xml2js.parseString(body, { explicitArray: false }, function(err, _result) {
-            if (err) {
-              return callback(err);
-            }
-            if (!_result.oembed) {
-              return callback(new Error('XML response lacks oembed element'));
-            }
-            _result = _result.oembed;
-            _result._xml = true;
-            result = _result;
-            return callback(null);
-          });
-        } else {
-          try {
-            result = JSON.parse(body);
-            return callback(null);
-          } catch (e) {
-            return callback(e);
-          }
+      throw new Error('no oembed discovery information available');
+    }
+    return { oUrl };
+  }
+
+  async function retrieve() { 
+    // Just for testing - a lot of modern services
+    // default to JSON and we want to make sure we
+    // still test XML too
+    if (forceXml) {
+      oUrl = oUrl.replace('json', 'xml');
+    }
+    if (options) {
+      // make sure parsed.query is an object by passing true as
+      // second argument
+      const parsed = urls.parse(oUrl, true);
+      const keys = Object.keys(options);
+      if (!parsed.query) {
+        parsed.query = {};
+      }
+      keys.forEach(function(key) {
+        if (key !== 'headers') {
+          parsed.query[key] = options[key];
         }
       });
+      // Clean up things url.format defaults to if they are already there,
+      // ensuring that parsed.query is actually used
+      delete parsed.href;
+      delete parsed.search;
+      oUrl = urls.format(parsed);
     }
-  }, function(err) {
-    if (err) {
-      return mainCallback(err);
+    const body = await get(oUrl, {
+      headers: Object.assign({
+        'User-Agent': 'oembetter'
+      }, options.headers || {})
+    });
+    if (body[0] === '<') {
+      return parseXmlString(body);
+    } else {
+      return JSON.parse(body);
     }
-    return mainCallback(null, result);
-  });
+  }
 };
+
+async function get(url, options) {
+  console.log('calling fetch');
+  const response = await fetch(url, options);
+  console.log('after fetch');
+  if (response.status >= 400) {
+    console.log('throwing');
+    throw response;
+  }
+  console.log('returning response.text()');
+  return response.text();
+}
+
+async function parseXmlString(body) {
+  const result = await util.promisify(xml2js.parseString)(body, { explicitArray: false });
+  if (!result.oembed) {
+    return callback(new Error('XML response lacks oembed element'));
+  }
+  result = result.oembed;
+  result._xml = true;
+  return result;
+}
 
 // For testing
 module.exports.setForceXml = function(flag) {
   forceXml = flag;
 };
-
