@@ -70,7 +70,7 @@ async function oembed(url, options, endpoint, callback, _canonical) {
     for (let i = 0; (i < ideas.length); i++) {
       oUrl = $(ideas[i]).attr('href');
       if (oUrl) {
-        oUrl = urls.resolve(response.request.href, oUrl);
+        oUrl = urls.resolve(url, oUrl);
         if (url.match(/^https:/) && oUrl.match(/^http:/)) {
           // Fix for YouTube's bug 12/15/20: issuing HTTP discovery URLs
           // but flunking them with a 403 when they arrive
