@@ -17,17 +17,12 @@ async function oembed(url, options, endpoint, callback, _canonical) {
 
   try {
     let result;
-    console.log('cd');
     const { canonical, oUrl } = await discover();
-    console.log('ad');
     if (canonical) {
-      console.log('canon');
-      return oembed(canonical, options, endpoint, mainCallback, true);
+      return oembed(canonical, options, endpoint, callback, true);
     }
-    console.log('result');
     return callback(null, await retrieve());
   } catch (e) {
-    console.log('fail', e);
     return callback(e);
   }
 
@@ -45,13 +40,11 @@ async function oembed(url, options, endpoint, callback, _canonical) {
     }
 
     // otherwise discover it
-    console.log('calling get');
     const body = await get(url, {
       headers: Object.assign({
         'User-Agent': 'oembetter'
       }, options.headers || {})
     });
-    console.log('after get');
     const $ = cheerio.load(body);
 
     // <link rel="alternate" type="application/json+oembed" href="http://www.youtube.com/oembed?format=json&amp;url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dzsl_auoGuy4" title="An Engineer&#39;s Guide to Cats 2.0 - The Sequel">
@@ -137,23 +130,19 @@ async function oembed(url, options, endpoint, callback, _canonical) {
 };
 
 async function get(url, options) {
-  console.log('calling fetch');
   const response = await fetch(url, options);
-  console.log('after fetch');
   if (response.status >= 400) {
-    console.log('throwing');
     throw response;
   }
-  console.log('returning response.text()');
   return response.text();
 }
 
 async function parseXmlString(body) {
-  const result = await util.promisify(xml2js.parseString)(body, { explicitArray: false });
-  if (!result.oembed) {
-    return callback(new Error('XML response lacks oembed element'));
+  const response = await util.promisify(xml2js.parseString)(body, { explicitArray: false });
+  if (!response.oembed) {
+    throw new Error('XML response lacks oembed element');
   }
-  result = result.oembed;
+  result = response.oembed;
   result._xml = true;
   return result;
 }
