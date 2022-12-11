@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2 - 2022-12-11
+
+- Switched to `node-fetch`, eliminating installation warnings about the unsupported `request` module.
+- Internal implementation of `oembed.js` now uses `async/await` for better maintainability.
+
 ## 1.0.1 - 2020-06-30
 
 ### Fixes
