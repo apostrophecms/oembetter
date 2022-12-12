@@ -4,7 +4,8 @@
   "description": "A modern oembed client. Allows you to register filters to improve or supply oembed support for sites that don't normally have it. You can also supply a allowlist of services you trust to prevent XSS attacks.",
   "main": "index.js",
   "scripts": {
-    "test": "cd tests && mocha test"
+    "test": "cd tests && mocha test",
+    "eslint": "eslint --ext .js ."
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,11 @@
     "xml2js": "^0.4.4"
   },
   "devDependencies": {
-    "mocha": "^10.0.0"
+    "mocha": "^10.0.0",
+    "eslint": "^7.25.0",
+    "eslint-config-apostrophe": "^3.4.0",
+    "eslint-plugin-n": "^15.2.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
   }
 }

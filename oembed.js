@@ -1,7 +1,6 @@
 const fetch = require('node-fetch');
 const urls = require('url');
 const xml2js = require('xml2js');
-const async = require('async');
 const cheerio = require('cheerio');
 const util = require('util');
 
@@ -15,9 +14,11 @@ module.exports = oembed;
 
 async function oembed(url, options, endpoint, callback, _canonical) {
 
+  let oUrl;
+
   try {
-    let result;
-    const { canonical, oUrl } = await discover();
+    const { canonical, url } = await discover();
+    oUrl = url;
     if (canonical) {
       return oembed(canonical, options, endpoint, callback, true);
     }
@@ -28,15 +29,14 @@ async function oembed(url, options, endpoint, callback, _canonical) {
 
   async function discover() {
     // if we're being told the end point, use it
-    if (endpoint)
-    {
+    if (endpoint) {
       if (!options) {
         options = {};
       }
 
-      oUrl = endpoint;
+      url = endpoint;
       options.url = url;
-      return { oUrl };
+      return { url };
     }
 
     // otherwise discover it
@@ -61,22 +61,21 @@ async function oembed(url, options, endpoint, callback, _canonical) {
     ];
 
     for (let i = 0; (i < ideas.length); i++) {
-      oUrl = $(ideas[i]).attr('href');
-      if (oUrl) {
-        oUrl = urls.resolve(url, oUrl);
-        if (url.match(/^https:/) && oUrl.match(/^http:/)) {
+      url = $(ideas[i]).attr('href');
+      if (url) {
+        url = urls.resolve(url, url);
+        if (url.match(/^https:/) && url.match(/^http:/)) {
           // Fix for YouTube's bug 12/15/20: issuing HTTP discovery URLs
           // but flunking them with a 403 when they arrive
-          if (oUrl.match(/youtube/) && oUrl.match(/^http:/)) {
-            oUrl = oUrl.replace(/^http:/, 'https:');
+          if (url.match(/youtube/) && url.match(/^http:/)) {
+            url = url.replace(/^http:/, 'https:');
           }
         }
         break;
       }
     }
 
-
-    if (!oUrl) {
+    if (!url) {
       if (!_canonical) {
         // No oembed information here, however if
         // there is a canonical URL retry with that instead
@@ -87,10 +86,10 @@ async function oembed(url, options, endpoint, callback, _canonical) {
       }
       throw new Error('no oembed discovery information available');
     }
-    return { oUrl };
+    return { url };
   }
 
-  async function retrieve() { 
+  async function retrieve() {
     // Just for testing - a lot of modern services
     // default to JSON and we want to make sure we
     // still test XML too
@@ -142,7 +141,7 @@ async function parseXmlString(body) {
   if (!response.oembed) {
     throw new Error('XML response lacks oembed element');
   }
-  result = response.oembed;
+  const result = response.oembed;
   result._xml = true;
   return result;
 }
