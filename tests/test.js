@@ -1,15 +1,14 @@
 
 const assert = require('assert');
 const oembetter = require('../index.js')();
-const urls = require('url');
 
 // For testing custom before filters
 oembetter.addBefore(function(url, options, response, callback) {
-  const parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('hootenanny.com', parsed.hostname)) {
     return setImmediate(callback);
   }
-  const matches = parsed.path.match(/pages\/(\d+).html/);
+  const matches = parsed.pathname.match(/pages\/(\d+).html/);
   if (!matches) {
     return setImmediate(callback);
   }
@@ -23,7 +22,7 @@ oembetter.addBefore(function(url, options, response, callback) {
 
 // For testing a before filter that just adjusts the URL
 oembetter.addBefore(function(url, options, response, callback) {
-  const parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('wiggypants.com', parsed.hostname)) {
     return setImmediate(callback);
   }
@@ -33,7 +32,7 @@ oembetter.addBefore(function(url, options, response, callback) {
 
 // just verifying that wiggypants became jiggypants
 oembetter.addBefore(function(url, options, response, callback) {
-  const parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('jiggypants.com', parsed.hostname)) {
     return setImmediate(callback);
   }
@@ -42,7 +41,7 @@ oembetter.addBefore(function(url, options, response, callback) {
 
 // "after" filter can change a response
 oembetter.addAfter(function(url, options, response, callback) {
-  const parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('jiggypants.com', parsed.hostname)) {
     return setImmediate(callback);
   }
@@ -52,7 +51,7 @@ oembetter.addAfter(function(url, options, response, callback) {
 
 // "fallback" filter can create a response when oembed fails
 oembetter.addFallback(function(url, options, callback) {
-  const parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('wonkypants83742938.com', parsed.hostname)) {
     return setImmediate(callback);
   }
@@ -61,7 +60,7 @@ oembetter.addFallback(function(url, options, callback) {
 
 // fallback filter for a working domain has no effect
 oembetter.addFallback(function(url, options, callback) {
-  const parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('youtube.com', parsed.hostname)) {
     return setImmediate(callback);
   }

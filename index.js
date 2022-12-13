@@ -1,7 +1,6 @@
 const oembed = require('./oembed.js');
 const async = require('async');
 const filters = require('./filters.js');
-const urls = require('url');
 
 module.exports = function(options) {
 
@@ -30,8 +29,10 @@ module.exports = function(options) {
     }
     let response;
     const warnings = [];
-    const parsed = urls.parse(url);
-    if (!parsed) {
+    let parsed;
+    try {
+      parsed = new URL(url);
+    } catch (e) {
       return callback(new Error('oembetter: invalid URL: ' + url));
     }
     if ((parsed.protocol !== 'http:') && (parsed.protocol !== 'https:')) {

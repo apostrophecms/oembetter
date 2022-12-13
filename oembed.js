@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const urls = require('url');
 const xml2js = require('xml2js');
 const cheerio = require('cheerio');
 const util = require('util');
@@ -28,15 +27,16 @@ async function oembed(url, options, endpoint, callback, _canonical) {
   }
 
   async function discover() {
-    // if we're being told the end point, use it
+    let resultUrl;
+    // if we're being told the endpoint, use it
     if (endpoint) {
       if (!options) {
         options = {};
       }
 
-      url = endpoint;
-      options.url = url;
-      return { url };
+      resultUrl = endpoint;
+      options.url = resultUrl;
+      return { resultUrl };
     }
 
     // otherwise discover it
@@ -61,21 +61,21 @@ async function oembed(url, options, endpoint, callback, _canonical) {
     ];
 
     for (let i = 0; (i < ideas.length); i++) {
-      url = $(ideas[i]).attr('href');
-      if (url) {
-        url = urls.resolve(url, url);
-        if (url.match(/^https:/) && url.match(/^http:/)) {
+      const linkUrl = $(ideas[i]).attr('href');
+      if (linkUrl) {
+        resultUrl = new URL(linkUrl, url);
+        if (resultUrl.protocol === 'http:') {
           // Fix for YouTube's bug 12/15/20: issuing HTTP discovery URLs
           // but flunking them with a 403 when they arrive
-          if (url.match(/youtube/) && url.match(/^http:/)) {
-            url = url.replace(/^http:/, 'https:');
+          if (resultUrl.hostname.match(/youtube/) && resultUrl.hostname.match(/^http:/)) {
+            resultUrl.protocol = 'https';
           }
         }
         break;
       }
     }
 
-    if (!url) {
+    if (!resultUrl) {
       if (!_canonical) {
         // No oembed information here, however if
         // there is a canonical URL retry with that instead
@@ -86,7 +86,7 @@ async function oembed(url, options, endpoint, callback, _canonical) {
       }
       throw new Error('no oembed discovery information available');
     }
-    return { url };
+    return { url: resultUrl.toString() };
   }
 
   async function retrieve() {
@@ -99,21 +99,18 @@ async function oembed(url, options, endpoint, callback, _canonical) {
     if (options) {
       // make sure parsed.query is an object by passing true as
       // second argument
-      const parsed = urls.parse(oUrl, true);
+      const parsed = new URL(oUrl, url);
       const keys = Object.keys(options);
-      if (!parsed.query) {
-        parsed.query = {};
-      }
       keys.forEach(function(key) {
         if (key !== 'headers') {
-          parsed.query[key] = options[key];
+          parsed.searchParams.set(key, options[key]);
         }
       });
       // Clean up things url.format defaults to if they are already there,
       // ensuring that parsed.query is actually used
       delete parsed.href;
       delete parsed.search;
-      oUrl = urls.format(parsed);
+      oUrl = parsed.toString();
     }
     const body = await get(oUrl, {
       headers: Object.assign({
