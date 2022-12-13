@@ -1,11 +1,10 @@
-var oembed = require('./oembed.js');
-var async = require('async');
-var filters = require('./filters.js');
-var urls = require('url');
+const oembed = require('./oembed.js');
+const async = require('async');
+const filters = require('./filters.js');
 
 module.exports = function(options) {
 
-  var self = {};
+  const self = {};
 
   if (!options) {
     options = {};
@@ -16,7 +15,7 @@ module.exports = function(options) {
   self.fallback = filters.fallback.concat(options.fallback || []);
 
   self.fetch = function(url, options, callback) {
-    var i;
+    let i;
     if (arguments.length === 2) {
       callback = options;
       options = {};
@@ -28,18 +27,19 @@ module.exports = function(options) {
       // to https so that they work
       url = 'https:' + url;
     }
-    var response;
-    var warnings = [];
-    var parsed = urls.parse(url);
-    if (!parsed) {
+    let response;
+    const warnings = [];
+    let parsed;
+    try {
+      parsed = new URL(url);
+    } catch (e) {
       return callback(new Error('oembetter: invalid URL: ' + url));
     }
-    if ((parsed.protocol !== 'http:') && (parsed.protocol !== 'https:'))
-    {
+    if ((parsed.protocol !== 'http:') && (parsed.protocol !== 'https:')) {
       return callback(new Error('oembetter: URL is neither http nor https: ' + url));
     }
     if (self._allowlist) {
-      var good = false;
+      let good = false;
       for (i = 0; (i < self._allowlist.length); i++) {
         if (!parsed.hostname) {
           continue;
@@ -53,7 +53,7 @@ module.exports = function(options) {
         return callback(new Error('oembetter: ' + url + ' is not in an allowed domain.'));
       }
     }
-    var endpoint = false;
+    let endpoint = false;
     if (self._endpoints) {
       for (i = 0; i < self._endpoints.length; i++) {
         if (!parsed.hostname) {
@@ -208,9 +208,20 @@ module.exports = function(options) {
   ];
 
   self.suggestedEndpoints = [
-    { domain: 'instagram.com', endpoint: 'http://api.instagram.com/oembed' },
-    { domain: 'facebook.com', path: /\/videos\//, endpoint: 'https://www.facebook.com/plugins/video/oembed.json/' },
-    { domain: 'facebook.com', path: /\/posts\//, endpoint: 'https://www.facebook.com/plugins/post/oembed.json/' }
+    {
+      domain: 'instagram.com',
+      endpoint: 'http://api.instagram.com/oembed'
+    },
+    {
+      domain: 'facebook.com',
+      path: /\/videos\//,
+      endpoint: 'https://www.facebook.com/plugins/video/oembed.json/'
+    },
+    {
+      domain: 'facebook.com',
+      path: /\/posts\//,
+      endpoint: 'https://www.facebook.com/plugins/post/oembed.json/'
+    }
   ];
 
   self.endpoints = function(_endpoints) {

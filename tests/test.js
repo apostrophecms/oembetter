@@ -1,19 +1,19 @@
-var assert = require("assert");
-var oembetter = require('../index.js')();
-var urls = require('url');
+
+const assert = require('assert');
+const oembetter = require('../index.js')();
 
 // For testing custom before filters
 oembetter.addBefore(function(url, options, response, callback) {
-  var parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('hootenanny.com', parsed.hostname)) {
     return setImmediate(callback);
   }
-  var matches = parsed.path.match(/pages\/(\d+).html/);
+  const matches = parsed.pathname.match(/pages\/(\d+).html/);
   if (!matches) {
     return setImmediate(callback);
   }
-  var id = matches[1];
-  var newResponse = {
+  const id = matches[1];
+  const newResponse = {
     thumbnail_url: 'http://hootenanny.com/thumbnails/' + id + '.jpg',
     html: '<iframe src="http://hootenanny.com/videos/' + id + '"></iframe>'
   };
@@ -22,7 +22,7 @@ oembetter.addBefore(function(url, options, response, callback) {
 
 // For testing a before filter that just adjusts the URL
 oembetter.addBefore(function(url, options, response, callback) {
-  var parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('wiggypants.com', parsed.hostname)) {
     return setImmediate(callback);
   }
@@ -32,7 +32,7 @@ oembetter.addBefore(function(url, options, response, callback) {
 
 // just verifying that wiggypants became jiggypants
 oembetter.addBefore(function(url, options, response, callback) {
-  var parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('jiggypants.com', parsed.hostname)) {
     return setImmediate(callback);
   }
@@ -41,7 +41,7 @@ oembetter.addBefore(function(url, options, response, callback) {
 
 // "after" filter can change a response
 oembetter.addAfter(function(url, options, response, callback) {
-  var parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('jiggypants.com', parsed.hostname)) {
     return setImmediate(callback);
   }
@@ -51,7 +51,7 @@ oembetter.addAfter(function(url, options, response, callback) {
 
 // "fallback" filter can create a response when oembed fails
 oembetter.addFallback(function(url, options, callback) {
-  var parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('wonkypants83742938.com', parsed.hostname)) {
     return setImmediate(callback);
   }
@@ -60,13 +60,12 @@ oembetter.addFallback(function(url, options, callback) {
 
 // fallback filter for a working domain has no effect
 oembetter.addFallback(function(url, options, callback) {
-  var parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('youtube.com', parsed.hostname)) {
     return setImmediate(callback);
   }
   return callback(null, { html: 'oopsie' });
 });
-
 
 describe('oembetter', function() {
   // youtube oembed can be sluggish
@@ -80,13 +79,11 @@ describe('oembetter', function() {
       return done();
     });
   });
-  var result;
   it('should return an oembed response for youtube', function(done) {
     oembetter.fetch('https://www.youtube.com/watch?v=zsl_auoGuy4', function(err, response) {
       assert(!err);
       assert(response);
       assert(response.html);
-      result = response;
       done();
     });
   });
@@ -98,7 +95,6 @@ describe('oembetter', function() {
       assert(response);
       assert(response.html);
       assert(response._xml);
-      result = response;
       done();
     });
   });
@@ -201,10 +197,8 @@ describe('oembetter', function() {
         assert(response);
         assert(response.html);
         assert(response.thumbnail_url);
-        result = response;
         done();
       });
     });
   }
 });
-

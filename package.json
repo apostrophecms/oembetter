@@ -1,10 +1,10 @@
 {
   "name": "oembetter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A modern oembed client. Allows you to register filters to improve or supply oembed support for sites that don't normally have it. You can also supply a allowlist of services you trust to prevent XSS attacks.",
   "main": "index.js",
   "scripts": {
-    "test": "cd tests && mocha test"
+    "test": "eslint --ext .js . && eslint && cd tests && mocha test"
   },
   "repository": {
     "type": "git",
@@ -25,11 +25,16 @@
   "dependencies": {
     "async": "^0.9.0",
     "cheerio": "^1.0.0-rc.10",
-    "request": "^2.37.0",
+    "node-fetch": "^2.6.7",
     "urls": "0.0.4",
     "xml2js": "^0.4.4"
   },
   "devDependencies": {
-    "mocha": "^8.2.1"
+    "mocha": "^10.0.0",
+    "eslint": "^7.25.0",
+    "eslint-config-apostrophe": "^3.4.0",
+    "eslint-plugin-n": "^15.2.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
   }
 }

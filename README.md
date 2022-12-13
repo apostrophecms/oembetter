@@ -13,7 +13,7 @@
 ## Basic Usage
 
 ```javascript
-var oembetter = require('oembetter')();
+const oembetter = require('oembetter')();
 
 oembetter.fetch(url, function(err, response) {
   if (!err) {
@@ -34,7 +34,7 @@ oembetter is not restricted to handling responses of type `video`. See the [oemb
 You can pass an object containing `maxwidth` and `maxheight` options. Sites vary in how well they support them.
 
 ```javascript
-var oembetter = require('oembetter')();
+const oembetter = require('oembetter')();
 
 oembetter.fetch(url, { maxwidth: 480, maxheight: 480 }, function(err, response) {
   if (!err) {
@@ -49,7 +49,7 @@ oembetter.fetch(url, { maxwidth: 480, maxheight: 480 }, function(err, response) 
 You may pass on custom headers to be included in all HTTP requests made by oembetter. `Referer` is particularly useful to ensure that Vimeo allows you to embed videos when they are private and embedding is restricted on a per-domain basis:
 
 ```javascript
-var oembetter = require('oembetter')();
+const oembetter = require('oembetter')();
 
 oembetter.fetch('https://vimeo.com/abc/def', {
   headers: {
@@ -118,19 +118,18 @@ Pass a function to the `addBefore` method. This function will receive the URL, t
 Here's an example: `hootenanny.com` (yes, I made it up) has pages like `/pages/50.html`. We know each one has a thumbnail at `/thumbnails/50.jpg` and a video page suitable for iframes at `/videos/50`. Let's create our own oembed response since `hootenanny.com` doesn't support it.
 
 ```javascript
-var urls = require('url');
 
 oembetter.addBefore(function(url, options, response, callback) {
-  var parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('hootenanny.com', parsed.hostname)) {
     return setImmediate(callback);
   }
-  var matches = parsed.path.match(/pages\/(\d+).html/);
+  const matches = parsed.pathname.match(/pages\/(\d+).html/);
   if (!matches) {
     return setImmediate(callback);
   }
-  var id = matches[1];
-  var newResponse = {
+  const id = matches[1];
+  const newResponse = {
     thumbnail_url: 'http://hootenanny.com/thumbnails/' + id + '.jpg',
     html: '<iframe src="http://hootenanny.com/videos/' + id + '"></iframe>'
   };
@@ -142,7 +141,7 @@ You can also write a filter that just adjusts URLs. This filter knows that `wigg
 
 ```javascript
 oembetter.addBefore(function(url, options, response, callback) {
-  var parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('wiggypants.com', parsed.hostname)) {
     return setImmediate(callback);
   }
@@ -168,7 +167,7 @@ oembetter.addAfter(function(url, options, response, callback) {
   response.html = response.html.replace('feature=oembed', 'feature=oembed&wmode=opaque');
 
   // Change thumbnail to be largest available if it exists
-  var maxResImage = result.thumbnail_url.replace('hqdefault.jpg', 'maxresdefault.jpg');
+  const maxResImage = result.thumbnail_url.replace('hqdefault.jpg', 'maxresdefault.jpg');
 
   return request.head(maxResImage, function(err, httpResponse) {
     if (response.statusCode < 400) {
@@ -192,7 +191,7 @@ This only makes sense when you're hopeful that oembed will work some of the time
 ```javascript
 // "fallback" filter can create a response when oembed fails
 oembetter.addFallback(function(url, options, callback) {
-  var parsed = urls.parse(url);
+  const parsed = new URL(url);
   if (!oembetter.inDomain('wonkypants83742938.com', parsed.hostname)) {
     return setImmediate(callback);
   }
