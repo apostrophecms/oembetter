@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.2 - 2022-12-11
+## 1.0.2 - 2022-12-21
 
 - Switched to `node-fetch`, eliminating installation warnings about the unsupported `request` module.
 - Switched to mocha 10.x, eliminating another set of installation warnings.
