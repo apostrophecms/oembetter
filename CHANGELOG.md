@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0 - 2023-05-03
+
+- Switched to `fast-xml-parser`, eliminating installation warnings about `xml2js`.
+
 ## 1.0.2 - 2022-12-21
 
 - Switched to `node-fetch`, eliminating installation warnings about the unsupported `request` module.

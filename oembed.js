@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
-const xml2js = require('xml2js');
+const { XMLParser } = require('fast-xml-parser');
+
 const cheerio = require('cheerio');
-const util = require('util');
 
 let forceXml = false;
 
@@ -134,7 +134,8 @@ async function get(url, options) {
 }
 
 async function parseXmlString(body) {
-  const response = await util.promisify(xml2js.parseString)(body, { explicitArray: false });
+  const parser = new XMLParser();
+  const response = parser.parse(body);
   if (!response.oembed) {
     throw new Error('XML response lacks oembed element');
   }
