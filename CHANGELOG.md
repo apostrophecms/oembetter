@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1 - 2023-09-22
+
+- Hardcode the oembed endpoint for vimeo, which stopped offering oembed metadata on pages.
+
 ## 1.1.0 - 2023-05-03
 
 - Switched to `fast-xml-parser`, eliminating installation warnings about `xml2js`.
