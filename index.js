@@ -221,6 +221,11 @@ module.exports = function(options) {
       domain: 'facebook.com',
       path: /\/posts\//,
       endpoint: 'https://www.facebook.com/plugins/post/oembed.json/'
+    },
+    {
+      domain: 'vimeo.com',
+      path: /\/video\//,
+      endpoint: 'https://vimeo.com/api/oembed.json'
     }
   ];
 

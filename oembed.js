@@ -34,9 +34,8 @@ async function oembed(url, options, endpoint, callback, _canonical) {
         options = {};
       }
 
-      resultUrl = endpoint;
-      options.url = resultUrl;
-      return { resultUrl };
+      options.url = url;
+      return { url: endpoint };
     }
 
     // otherwise discover it
