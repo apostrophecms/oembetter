@@ -1,5 +1,9 @@
 # Changelog
 
+## UNRELEASED
+
+- Removes `path` regex check on the vimeo endpoint to allow urls with and without `/video`.
+
 ## 1.1.1 - 2023-09-22
 
 - Hardcode the oembed endpoint for vimeo, which stopped offering oembed metadata on pages.
