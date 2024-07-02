@@ -224,7 +224,6 @@ module.exports = function(options) {
     },
     {
       domain: 'vimeo.com',
-      path: /\/video\//,
       endpoint: 'https://vimeo.com/api/oembed.json'
     }
   ];
