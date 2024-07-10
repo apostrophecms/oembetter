@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED
+## 1.1.2 (2024-07-10)
 
 - Removes `path` regex check on the vimeo endpoint to allow urls with and without `/video`.
 
