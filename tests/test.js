@@ -79,8 +79,24 @@ describe('oembetter', function() {
       return done();
     });
   });
-  it('should return an oembed response for youtube', function(done) {
+  it('should return an oembed response for youtube full links', function(done) {
+    const oembetter = require('../index.js')();
+    // Use the suggested endpoints, youtube sometimes has discovery issues
+    // so we always do this in production
+    oembetter.endpoints(oembetter.suggestedEndpoints);
     oembetter.fetch('https://www.youtube.com/watch?v=zsl_auoGuy4', function(err, response) {
+      assert(!err);
+      assert(response);
+      assert(response.html);
+      done();
+    });
+  });
+  it('should return an oembed response for youtube sharing links', function(done) {
+    const oembetter = require('../index.js')();
+    // Use the suggested endpoints, youtube sometimes has discovery issues
+    // so we always do this in production
+    oembetter.endpoints(oembetter.suggestedEndpoints);
+    oembetter.fetch('https://youtu.be/RRfHbyCQDCo?si=U5yxvQeXgACwajqa', function(err, response) {
       assert(!err);
       assert(response);
       assert(response.html);
