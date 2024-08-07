@@ -1,8 +1,8 @@
 # Changelog
 
-## UNRELEASED
+## 1.1.4 (2024-08-07)
 
-- Hardcode the YouTube oembed endpoint for sharing URLs too.
+- Followup to 1.1.3: also hardcode the YouTube oembed endpoint for sharing URLs (`youtu.be`).
 
 ## 1.1.3 (2024-08-07)
 
