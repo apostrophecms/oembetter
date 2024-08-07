@@ -2,7 +2,7 @@
 
 ## 1.1.3 (2024-08-07)
 
-- Hardcode the well-known YouTube oembed endpoint. While YouTube still does output oembed metadata, today weroken and many users saw broken videos due to broken canonical tags on YouTube pages (`link rel="undefined"`), which hampered discovery. Also this heavily used service will benefit from one less request per video.
+- Hardcode the well-known YouTube oembed endpoint. While YouTube still does output oembed metadata, today many users saw broken videos due to broken canonical tags on YouTube pages (`link rel="undefined"`), which hampered discovery. Also this heavily used service will benefit from one less request per video.
 
 ## 1.1.2 (2024-07-10)
 
