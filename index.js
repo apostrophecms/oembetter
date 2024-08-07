@@ -229,6 +229,10 @@ module.exports = function(options) {
     {
       domain: 'youtube.com',
       endpoint: 'https://www.youtube.com/oembed'
+    },
+    {
+      domain: 'youtu.be',
+      endpoint: 'https://www.youtube.com/oembed'
     }
   ];
 
